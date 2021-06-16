@@ -383,6 +383,7 @@ CQL storage backend options
 | storage.cql.compression | Whether the storage backend should use compression when storing the data | Boolean | true | FIXED |
 | storage.cql.compression-block-size | The size of the compression blocks in kilobytes | Integer | 64 | FIXED |
 | storage.cql.compression-type | The sstable_compression value JanusGraph uses when creating column families. This accepts any value allowed by Cassandra's sstable_compression option. Leave this unset to disable sstable_compression on JanusGraph-created CFs. | String | LZ4Compressor | MASKABLE |
+| storage.cql.enable-astra- | True to enable Astra (Managed DBaaS astra.datastax.com) as the persisted Store in place of Cassandra | Boolean | false | MASKABLE |
 | storage.cql.heartbeat-interval | The connection heartbeat interval in milliseconds. | Long | (no default value) | MASKABLE |
 | storage.cql.heartbeat-timeout | How long the driver waits for the response (in milliseconds) to a heartbeat. | Long | (no default value) | MASKABLE |
 | storage.cql.keyspace | The name of JanusGraph's keyspace.  It will be created if it does not exist. | String | janusgraph | LOCAL |
@@ -493,7 +494,7 @@ HBase storage options
 | storage.hbase.short-cf-names | Whether to shorten the names of JanusGraph's column families to one-character mnemonics to conserve storage space | Boolean | true | FIXED |
 | storage.hbase.skip-schema-check | Assume that JanusGraph's HBase table and column families already exist. When this is true, JanusGraph will not check for the existence of its table/CFs, nor will it attempt to create them under any circumstances.  This is useful when running JanusGraph without HBase admin privileges. | Boolean | false | MASKABLE |
 | storage.hbase.snapshot-name | The name of an existing HBase snapshot to be used by HBaseSnapshotInputFormat | String | janusgraph-snapshot | LOCAL |
-| storage.hbase.snapshot-restore-dir | The temporary directory to be used by HBaseSnapshotInputFormat to restore a snapshot. This directory should be on the same File System as the HBase root dir. | String | /tmp | LOCAL |
+| storage.hbase.snapshot-restore-dir | The temporary directory to be used by HBaseSnapshotInputFormat to restore a snapshot. This directory should be on the same File System as the HBase root dir. | String | /var/folders/y2/bbfjy56x2z18v_rd4_2ndmkh0000gn/T/ | LOCAL |
 | storage.hbase.table | The name of the table JanusGraph will use.  When storage.hbase.skip-schema-check is false, JanusGraph will automatically create this table if it does not already exist. If this configuration option is not provided but graph.graphname is, the table will be set to that value. | String | janusgraph | LOCAL |
 
 ### storage.lock

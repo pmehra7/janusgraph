@@ -32,6 +32,7 @@ import com.datastax.oss.driver.internal.core.auth.PlainTextAuthProvider;
 import com.datastax.oss.driver.internal.core.ssl.DefaultSslEngineFactory;
 import com.datastax.oss.driver.shaded.guava.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.typesafe.config.ConfigFactory;
 import io.vavr.Tuple;
 import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
@@ -59,6 +60,9 @@ import org.janusgraph.util.system.NetworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Arrays;
@@ -81,7 +85,6 @@ import static org.janusgraph.diskstorage.cql.CQLConfigOptions.BATCH_STATEMENT_SI
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.HEARTBEAT_INTERVAL;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.HEARTBEAT_TIMEOUT;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.KEYSPACE;
-import static org.janusgraph.diskstorage.cql.CQLConfigOptions.LOCAL_DATACENTER;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.LOCAL_MAX_CONNECTIONS_PER_HOST;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.MAX_REQUESTS_PER_CONNECTION;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.METADATA_SCHEMA_ENABLED;
@@ -104,6 +107,7 @@ import static org.janusgraph.diskstorage.cql.CQLConfigOptions.NETTY_TIMER_TICKS_
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.NETTY_TIMER_TICK_DURATION;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.ONLY_USE_LOCAL_CONSISTENCY_FOR_SYSTEM_OPERATIONS;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.PARTITIONER_NAME;
+import static org.janusgraph.diskstorage.cql.CQLConfigOptions.ENABLE_ASTRA;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.PROTOCOL_VERSION;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.READ_CONSISTENCY;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.REMOTE_MAX_CONNECTIONS_PER_HOST;
@@ -130,6 +134,7 @@ import static org.janusgraph.diskstorage.cql.CQLConfigOptions.SSL_TRUSTSTORE_LOC
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.SSL_TRUSTSTORE_PASSWORD;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.USE_EXTERNAL_LOCKING;
 import static org.janusgraph.diskstorage.cql.CQLConfigOptions.WRITE_CONSISTENCY;
+import static org.janusgraph.diskstorage.cql.CQLConfigOptions.LOCAL_DATACENTER;
 import static org.janusgraph.diskstorage.cql.CQLKeyColumnValueStore.EXCEPTION_MAPPER;
 import static org.janusgraph.diskstorage.cql.CQLTransaction.getTransaction;
 import static org.janusgraph.graphdb.configuration.GraphDatabaseConfiguration.AUTH_PASSWORD;
@@ -269,13 +274,34 @@ public class CQLStoreManager extends DistributedStoreManager implements KeyColum
             throw new PermanentBackendException("Error initialising cluster contact points", e);
         }
 
-        final CqlSessionBuilder builder = CqlSession.builder()
-            .addContactPoints(contactPoints)
-            .withLocalDatacenter(configuration.get(LOCAL_DATACENTER));
+        final com.typesafe.config.Config astraConfig = ConfigFactory.parseFile(new File("astra-config.conf"));
+        final InputStream CLOUD_SECURE_BUNDLE;
+        final String CLIENT_ID;
+        final String CLIENT_SECRET;
+
+        try {
+            CLOUD_SECURE_BUNDLE = new FileInputStream(astraConfig.getString("cloud-secure-bundle-path"));
+            CLIENT_ID = astraConfig.getString("client-id");
+            CLIENT_SECRET = astraConfig.getString("client-secret");
+        } catch (java.io.FileNotFoundException e) {
+            throw new PermanentBackendException("Error Parsing Astra config", e);
+        }
+
+        final CqlSessionBuilder builder = CqlSession.builder();
 
         ProgrammaticDriverConfigLoaderBuilder configLoaderBuilder = DriverConfigLoader.programmaticBuilder();
         configLoaderBuilder.withString(DefaultDriverOption.SESSION_NAME, configuration.get(SESSION_NAME));
         configLoaderBuilder.withDuration(DefaultDriverOption.REQUEST_TIMEOUT, configuration.get(CONNECTION_TIMEOUT));
+
+        if (configuration.get(ENABLE_ASTRA) == Boolean.TRUE) {
+            builder
+                .withCloudSecureConnectBundle(CLOUD_SECURE_BUNDLE)
+                .withAuthCredentials(CLIENT_ID,CLIENT_SECRET);
+        } else {
+            builder
+                .addContactPoints(contactPoints)
+                .withLocalDatacenter(configuration.get(LOCAL_DATACENTER));
+        }
 
         if (configuration.get(PROTOCOL_VERSION) != 0) {
             configLoaderBuilder.withInt(DefaultDriverOption.PROTOCOL_VERSION, configuration.get(PROTOCOL_VERSION));

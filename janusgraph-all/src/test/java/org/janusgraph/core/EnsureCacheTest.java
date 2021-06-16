@@ -19,7 +19,8 @@ import org.janusgraph.diskstorage.configuration.backend.CommonsConfiguration;
 import org.janusgraph.graphdb.configuration.builder.GraphDatabaseConfigurationBuilder;
 import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.janusgraph.util.system.ConfigurationUtil;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+//import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;

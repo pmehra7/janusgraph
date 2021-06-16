@@ -1361,6 +1361,7 @@
         <profile>
             <id>coverage</id>
             <properties>
+                <!--suppress UnresolvedMavenProperty -->
                 <test.extra.jvm.opts>${jacoco.opts}</test.extra.jvm.opts>
             </properties>
             <build>

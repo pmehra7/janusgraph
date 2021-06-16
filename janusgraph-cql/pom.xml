@@ -15,6 +15,7 @@
         <vavr.version>0.10.3</vavr.version>
         <test.byteordered>byteordered</test.byteordered>
         <test.murmur>murmur</test.murmur>
+        <!--suppress UnresolvedMavenProperty -->
         <test.javaagent.opts>-javaagent:${com.github.jbellis:jamm:jar}</test.javaagent.opts>
         <test.extra.jvm.opts>${test.javaagent.opts}</test.extra.jvm.opts>
         <test.jvm.opts>-Xms256m -Xmx1280m -ea -XX:+HeapDumpOnOutOfMemoryError ${test.extra.jvm.opts}</test.jvm.opts>
@@ -112,54 +113,54 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>com.datastax.oss</groupId>
-            <artifactId>java-driver-core</artifactId>
-            <version>${cassandra-driver.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.json</groupId>
-                    <artifactId>json</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tinkerpop</groupId>
-                    <artifactId>gremlin-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tinkerpop</groupId>
-                    <artifactId>tinkergraph-gremlin</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-handler</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.datastax.oss</groupId>
-            <artifactId>java-driver-query-builder</artifactId>
-            <version>${cassandra-driver.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.json</groupId>
-                    <artifactId>json</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tinkerpop</groupId>
-                    <artifactId>gremlin-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tinkerpop</groupId>
-                    <artifactId>tinkergraph-gremlin</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-handler</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- Required for Cassandra-3 connectivity, see issue 172 -->
+        <!-- Required for Astra connectivity-->
+       <dependency>
+           <groupId>com.datastax.oss</groupId>
+           <artifactId>java-driver-core</artifactId>
+           <version>${cassandra-driver.version}</version>
+           <exclusions>
+               <exclusion>
+                   <groupId>org.json</groupId>
+                   <artifactId>json</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>org.apache.tinkerpop</groupId>
+                   <artifactId>gremlin-core</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>org.apache.tinkerpop</groupId>
+                   <artifactId>tinkergraph-gremlin</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>io.netty</groupId>
+                   <artifactId>netty-handler</artifactId>
+               </exclusion>
+           </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>com.datastax.oss</groupId>
+           <artifactId>java-driver-query-builder</artifactId>
+           <version>${cassandra-driver.version}</version>
+           <exclusions>
+               <exclusion>
+                   <groupId>org.json</groupId>
+                   <artifactId>json</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>org.apache.tinkerpop</groupId>
+                   <artifactId>gremlin-core</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>org.apache.tinkerpop</groupId>
+                   <artifactId>tinkergraph-gremlin</artifactId>
+               </exclusion>
+               <exclusion>
+                   <groupId>io.netty</groupId>
+                   <artifactId>netty-handler</artifactId>
+               </exclusion>
+           </exclusions>
+       </dependency>
+       <!-- Required for Cassandra-3 connectivity, see issue 172 -->
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-core</artifactId>
@@ -260,6 +261,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!--suppress UnresolvedMavenProperty -->
                     <excludedGroups>${test.cql.excludes}</excludedGroups>
                     <groups />
                     <argLine>${test.jvm.opts}</argLine>
@@ -270,11 +272,17 @@
                     <threadCount>1</threadCount>
                     <systemPropertyVariables>
                         <log4j.configuration>file:${project.build.testOutputDirectory}/log4j.properties</log4j.configuration>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.image>${cassandra.docker.image}</cassandra.docker.image>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.version>${cassandra.docker.version}</cassandra.docker.version>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.partitioner>${cassandra.docker.partitioner}</cassandra.docker.partitioner>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.useSSL>${cassandra.docker.useSSL}</cassandra.docker.useSSL>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.enableClientAuth>${cassandra.docker.enableClientAuth}</cassandra.docker.enableClientAuth>
+                        <!--suppress UnresolvedMavenProperty -->
                         <cassandra.docker.useDefaultConfigFromImage>${cassandra.docker.useDefaultConfigFromImage}</cassandra.docker.useDefaultConfigFromImage>
                     </systemPropertyVariables>
                 </configuration>
@@ -303,7 +311,7 @@
                             <perCoreThreadCount>false</perCoreThreadCount>
                             <threadCount>1</threadCount>
                             <runOrder>alphabetical</runOrder>
-                            <skip>${test.skip.serial}</skip>
+                            <!-- <skip>${test.skip.serial}</skip>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -330,7 +338,8 @@
 	            <activeByDefault>false</activeByDefault>
 	        </activation>
 	        <properties>
-	            <test.extra.jvm.opts>${jacoco.opts} ${test.javaagent.opts}</test.extra.jvm.opts>
+	            <!--suppress UnresolvedMavenProperty -->
+                <test.extra.jvm.opts>${jacoco.opts} ${test.javaagent.opts}</test.extra.jvm.opts>
 	        </properties>
         </profile>
 

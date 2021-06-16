@@ -32,6 +32,35 @@ public interface CQLConfigOptions {
             "cql",
             "CQL storage backend options");
 
+    // Config options for Astra.
+
+    ConfigOption<Boolean> ENABLE_ASTRA =
+        new ConfigOption<>(CQL_NS, "enable-astra",
+            "True to enable Astra (Managed DBaaS astra.datastax.com) as the persisted Store in place of Cassandra",
+            ConfigOption.Type.MASKABLE, false);
+
+    /*
+    ConfigOption<String> CLOUD_SECURE_BUNDLE = new ConfigOption<>(
+        CQL_NS,
+        "cloud-secure-bundle-path",
+        "Path to the cloud secure connect bundle. Must be provided to connect to Astra",
+        ConfigOption.Type.MASKABLE,
+        "");
+
+    ConfigOption<String> CLIENT_ID = new ConfigOption<>(
+        CQL_NS,
+        "client-id",
+        "Astra Client ID. Provided in Astra UI.",
+        ConfigOption.Type.MASKABLE,
+        "");
+    ConfigOption<String> CLIENT_SECRET = new ConfigOption<>(
+        CQL_NS,
+        "client-secret",
+        "Astra Client Secret. Provided in Astra UI.",
+        ConfigOption.Type.MASKABLE,
+        "");
+    */
+
     ConfigOption<String> KEYSPACE = new ConfigOption<>(
             CQL_NS,
             "keyspace",
@@ -254,11 +283,11 @@ public interface CQLConfigOptions {
             false);
 
     ConfigOption<Boolean> SSL_HOSTNAME_VALIDATION = new ConfigOption<>(
-        SSL_NS,
-        "hostname_validation",
-        "Enable / disable SSL hostname validation.",
-        ConfigOption.Type.LOCAL,
-        false);
+            SSL_NS,
+            "hostname_validation",
+            "Enable / disable SSL hostname validation.",
+            ConfigOption.Type.LOCAL,
+            false);
 
     ConfigOption<String> SSL_KEYSTORE_LOCATION = new ConfigOption<>(
             SSL_KEYSTORE_NS,
