@@ -61,7 +61,7 @@ compile "org.janusgraph:janusgraph-core:0.6.0"
 * Apache HBase 1.6.0, 2.2.7
 * Google Bigtable 1.3.0, 1.4.0, 1.5.0, 1.6.0, 1.7.0, 1.8.0, 1.9.0, 1.10.0, 1.11.0, 1.14.0
 * Oracle BerkeleyJE 7.5.11
-* Elasticsearch 6.0.1, 6.6.0, 7.12.0
+* Elasticsearch 6.0.1, 6.6.0, 7.13.2
 * Apache Lucene 8.6.3
 * Apache Solr 7.7.2, 8.6.3
 * Apache TinkerPop 3.5.0
@@ -244,7 +244,7 @@ after a shiny new JanusGraph header.
 
 We are dropping Ganglia as we are using dropwizard for metrics. Dropwizard did drop Ganglia in the newest major version.
 
-##### DataStax cassandra driver upgrade from 3.9.0 to 4.11.0
+##### DataStax cassandra driver upgrade from 3.9.0 to 4.12.0
 
 All DataStax cassandra driver metrics are now disabled by default. To enable DataStax driver metrics you need to provide 
 a list of Session level metrics and / or Node level metrics you want to enable. To provide a list of enabled metrics, 
