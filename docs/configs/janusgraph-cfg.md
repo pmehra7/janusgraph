@@ -383,7 +383,7 @@ CQL storage backend options
 | storage.cql.compression | Whether the storage backend should use compression when storing the data | Boolean | true | FIXED |
 | storage.cql.compression-block-size | The size of the compression blocks in kilobytes | Integer | 64 | FIXED |
 | storage.cql.compression-type | The sstable_compression value JanusGraph uses when creating column families. This accepts any value allowed by Cassandra's sstable_compression option. Leave this unset to disable sstable_compression on JanusGraph-created CFs. | String | LZ4Compressor | MASKABLE |
-| storage.cql.enable-astra- | True to enable Astra (Managed DBaaS astra.datastax.com) as the persisted Store in place of Cassandra | Boolean | false | MASKABLE |
+| storage.cql.enable-astra | True to enable Astra (Managed DBaaS astra.datastax.com) as the persisted Store in place of Cassandra | Boolean | false | MASKABLE |
 | storage.cql.heartbeat-interval | The connection heartbeat interval in milliseconds. | Long | (no default value) | MASKABLE |
 | storage.cql.heartbeat-timeout | How long the driver waits for the response (in milliseconds) to a heartbeat. | Long | (no default value) | MASKABLE |
 | storage.cql.keyspace | The name of JanusGraph's keyspace.  It will be created if it does not exist. | String | janusgraph | LOCAL |
